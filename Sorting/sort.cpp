@@ -6,6 +6,39 @@ void print(int arr[], int n){
     }
     cout<<endl;
 }
+
+//RADIX SORT
+void counting(int arr[], int n, int d){
+    vector<int> hash(10,0);
+    int dvd = pow(10,d);
+    for(int i=0;i<n;i++){
+        hash[(arr[i]/dvd)%10]++;
+    }
+    for(int i=1;i<10;i++){
+        hash[i] = hash[i] + hash[i-1];
+    }
+    vector<int> new_arr(n,0);
+    for(int i=n-1;i>=0;i--){
+        int temp = (arr[i]/dvd)%10;
+        new_arr[hash[temp]-1] = arr[i];
+        hash[temp]--;
+    }
+    for(int i=0;i<n;i++){
+        arr[i] = new_arr[i];
+    }
+}
+
+void radix_sort(int arr[], int n){
+    int mx = INT_MIN;
+    for(int i=0;i<n;i++){
+        mx = max(mx,arr[i]);
+    }
+
+    int digits = log10(mx)+1;
+    for(int i=0;i<digits;i++){
+        counting(arr,n,i);
+    }
+}
 //COUTING SORT
 void counting_sort(int arr[], int n){
     int mx = INT_MIN;
@@ -128,14 +161,15 @@ void selection_sort(int arr[], int n){
     }
 }
 int main(){
-    int arr[] = {1,4,45,7,2,4,2,6,8,4,15};
+    int arr[] = {170,45,75,90,802,24,2,66};
     int n = sizeof(arr)/sizeof(arr[0]);
     // selection_sort(arr,n);
     // bubble_sort(arr,n);
     // insertion_sort(arr,n);
     // merge_sort(arr,0,n-1);
     // quick_sort(arr,0,n-1);
-    counting_sort(arr,n);
+    // counting_sort(arr,n);
+    radix_sort(arr,n);
     print(arr,n);
     return 0;
 }
